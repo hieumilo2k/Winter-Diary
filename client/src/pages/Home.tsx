@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Logo from '../components/Logo';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -6,8 +6,20 @@ import PersonIcon from '@mui/icons-material/Person';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import InstagramIcon from '@mui/icons-material/Instagram';
+import { TogglePerson, Sidebar } from '../components';
 
 const Home = () => {
+  const [openPerson, setOpenPerson] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const handleClickPerson = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+    setOpenPerson((previousOpen) => !previousOpen);
+  };
+
+  const canBeOpen = openPerson && Boolean(anchorEl);
+  const id = canBeOpen ? 'transition-popper' : undefined;
+
   return (
     <>
       <div className='flex flex-row justify-between'>
@@ -18,7 +30,13 @@ const Home = () => {
           <Logo />
         </div>
         <div>
-          <PersonIcon className='text-white-F1 m-[35px] text-5xl cursor-pointer hover:scale-125' />
+          <button
+            type='button'
+            aria-describedby={id}
+            onClick={handleClickPerson}
+          >
+            <PersonIcon className='text-white-F1 m-[35px] text-5xl cursor-pointer hover:scale-125' />
+          </button>
         </div>
       </div>
       <div className='flex items-center w-full'>
@@ -51,6 +69,18 @@ const Home = () => {
           </Link>
         </div>
       </div>
+      {/* Sidebar */}
+      <Sidebar />
+      {/* ------- */}
+
+      {/* My Person */}
+      <TogglePerson
+        openPerson={openPerson}
+        anchorEl={anchorEl}
+        id={id}
+        setOpenPerson={setOpenPerson}
+      />
+      {/* -------- */}
     </>
   );
 };
