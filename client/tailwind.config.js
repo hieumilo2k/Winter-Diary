@@ -16,6 +16,9 @@ module.exports = {
       blue: {
         fb: '#4267B2',
       },
+      grey: {
+        dark: '#2C3333',
+      },
     },
     fontFamily: {
       'permanent-marker': ['Permanent Marker', 'cursive'],

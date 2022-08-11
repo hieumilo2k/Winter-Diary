@@ -115,3 +115,25 @@ body {
   }
 }
 /* ----------- */
+
+/* Modal */
+.modal {
+  background-color: #000000cc;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: translateX(-100%);
+  transition: transform 0.5s ease-in-out;
+  width: 30%;
+  height: 100%;
+}
+
+.modal.open {
+  transform: translateX(0);
+}
+/* ----- */

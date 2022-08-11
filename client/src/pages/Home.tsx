@@ -9,6 +9,7 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import { TogglePerson, Sidebar } from '../components';
 
 const Home = () => {
+  const [openSidebar, setOpenSidebar] = useState(false);
   const [openPerson, setOpenPerson] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -17,14 +18,24 @@ const Home = () => {
     setOpenPerson((previousOpen) => !previousOpen);
   };
 
+  const handleClickMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setOpenSidebar((previousOpen) => !previousOpen);
+    console.log(openSidebar);
+  };
+
   const canBeOpen = openPerson && Boolean(anchorEl);
-  const id = canBeOpen ? 'transition-popper' : undefined;
+  const idTogglePerson = canBeOpen ? 'transition-popper' : undefined;
 
   return (
     <>
       <div className='flex flex-row justify-between'>
         <div>
-          <MenuIcon className='text-white-F1  m-[35px] text-5xl cursor-pointer hover:scale-125' />
+          <button type='button' id='menu' onClick={handleClickMenu}>
+            <MenuIcon
+              id='menu'
+              className='text-white-F1  m-[35px] text-5xl cursor-pointer hover:scale-125'
+            />
+          </button>
         </div>
         <div className='w-64 my-[35px]'>
           <Logo />
@@ -32,7 +43,7 @@ const Home = () => {
         <div>
           <button
             type='button'
-            aria-describedby={id}
+            aria-describedby={idTogglePerson}
             onClick={handleClickPerson}
           >
             <PersonIcon className='text-white-F1 m-[35px] text-5xl cursor-pointer hover:scale-125' />
@@ -70,14 +81,14 @@ const Home = () => {
         </div>
       </div>
       {/* Sidebar */}
-      <Sidebar />
+      <Sidebar openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
       {/* ------- */}
 
       {/* My Person */}
       <TogglePerson
         openPerson={openPerson}
         anchorEl={anchorEl}
-        id={id}
+        id={idTogglePerson}
         setOpenPerson={setOpenPerson}
       />
       {/* -------- */}
