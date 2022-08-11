@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Logo from '../components/Logo';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -6,19 +6,48 @@ import PersonIcon from '@mui/icons-material/Person';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import InstagramIcon from '@mui/icons-material/Instagram';
+import { TogglePerson, Sidebar } from '../components';
 
 const Home = () => {
+  const [openSidebar, setOpenSidebar] = useState(false);
+  const [openPerson, setOpenPerson] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const handleClickPerson = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+    setOpenPerson((previousOpen) => !previousOpen);
+  };
+
+  const handleClickMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setOpenSidebar((previousOpen) => !previousOpen);
+    console.log(openSidebar);
+  };
+
+  const canBeOpen = openPerson && Boolean(anchorEl);
+  const idTogglePerson = canBeOpen ? 'transition-popper' : undefined;
+
   return (
     <>
       <div className='flex flex-row justify-between'>
         <div>
-          <MenuIcon className='text-white-F1  m-[35px] text-5xl cursor-pointer hover:scale-125' />
+          <button type='button' id='menu' onClick={handleClickMenu}>
+            <MenuIcon
+              id='menu'
+              className='text-white-F1  m-[35px] text-5xl cursor-pointer hover:scale-125'
+            />
+          </button>
         </div>
         <div className='w-64 my-[35px]'>
           <Logo />
         </div>
         <div>
-          <PersonIcon className='text-white-F1 m-[35px] text-5xl cursor-pointer hover:scale-125' />
+          <button
+            type='button'
+            aria-describedby={idTogglePerson}
+            onClick={handleClickPerson}
+          >
+            <PersonIcon className='text-white-F1 m-[35px] text-5xl cursor-pointer hover:scale-125' />
+          </button>
         </div>
       </div>
       <div className='flex items-center w-full'>
@@ -51,6 +80,18 @@ const Home = () => {
           </Link>
         </div>
       </div>
+      {/* Sidebar */}
+      <Sidebar openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
+      {/* ------- */}
+
+      {/* My Person */}
+      <TogglePerson
+        openPerson={openPerson}
+        anchorEl={anchorEl}
+        id={idTogglePerson}
+        setOpenPerson={setOpenPerson}
+      />
+      {/* -------- */}
     </>
   );
 };
