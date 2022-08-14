@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { UserDocument } from './user.entity';
 import { UpdateUserDto } from './dtos/updateUser.dto';
 import * as bcrypt from 'bcrypt';
+import * as fs from 'fs';
 
 @Injectable()
 export class UserService {
@@ -34,5 +35,11 @@ export class UserService {
       );
     }
     return { msg: 'Update Success!' };
+  }
+
+  removeTmp(path) {
+    fs.unlink(path, (err) => {
+      if (err) throw err;
+    });
   }
 }
