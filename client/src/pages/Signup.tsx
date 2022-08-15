@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
+  Alert,
   Avatar,
   Box,
   Button,
@@ -8,11 +9,93 @@ import {
   CssBaseline,
   Grid,
   TextField,
+  Tooltip,
   Typography,
 } from '@mui/material';
+import {
+  isEmail,
+  isEmpty,
+  isPassword,
+  isMatch,
+} from '../utils/validation/Validation';
 import { Logo } from '../components';
+import { AxiosError } from 'axios';
+import authApi from '../api/authApi';
+
+const initialState = {
+  firstName: '',
+  lastName: '',
+  email: '',
+  username: '',
+  password: '',
+  confirmPassword: '',
+  err: '',
+  success: '',
+};
 
 const SignUp = () => {
+  const [user, setUser] = useState(initialState);
+
+  const {
+    firstName,
+    lastName,
+    email,
+    username,
+    password,
+    confirmPassword,
+    err,
+    success,
+  } = user;
+
+  const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setUser({ ...user, [name]: value, err: '', success: '' });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (
+      isEmpty(firstName) ||
+      isEmpty(lastName) ||
+      isEmpty(email) ||
+      isEmpty(username) ||
+      isEmpty(password)
+    ) {
+      return setUser({
+        ...user,
+        err: 'Please fill in all fields.',
+        success: '',
+      });
+    }
+
+    if (!isEmail(email)) {
+      return setUser({ ...user, err: 'Invalid Email.', success: '' });
+    }
+
+    if (!isPassword(password)) {
+      return setUser({ ...user, err: 'Invalid Password.', success: '' });
+    }
+
+    if (!isMatch(password, confirmPassword)) {
+      return setUser({ ...user, err: 'Password did not match.', success: '' });
+    }
+
+    try {
+      const { data } = await authApi.signUp({
+        firstName,
+        lastName,
+        email,
+        username,
+        password,
+      });
+      setUser({ ...user, err: '', success: data.msg });
+    } catch (error) {
+      const err = error as AxiosError;
+      const data: any = err.response?.data;
+      data?.message && setUser({ ...user, err: data?.message, success: '' });
+    }
+  };
+
   return (
     <Container
       component='main'
@@ -37,86 +120,86 @@ const SignUp = () => {
         </Typography>
         <Box component='form' noValidate sx={{ mt: 1 }}>
           <TextField
-            error={true}
             margin='normal'
             required
             id='firstName'
             label='First Name'
             name='firstName'
+            value={firstName}
+            onChange={handleChangeInput}
             autoFocus
             className='customTextField mr-5 w-[47%]'
-            helperText={true ? 'Incorrect username or password' : ''}
           />
           <TextField
-            error={true}
             margin='normal'
             required
             id='lastName'
             label='Last Name'
             name='lastName'
+            value={lastName}
+            onChange={handleChangeInput}
             className='customTextField w-[48%]'
-            helperText={true ? 'Incorrect username or password' : ''}
           />
           <TextField
-            error={true}
             margin='normal'
             required
             fullWidth
             id='email'
             label='Email'
             name='email'
+            value={email}
+            onChange={handleChangeInput}
             autoComplete='email'
             className='customTextField'
-            helperText={true ? 'Incorrect username or password' : ''}
           />
           <TextField
-            error={true}
             margin='normal'
             required
             fullWidth
             id='username'
             label='Username'
             name='username'
+            value={username}
+            onChange={handleChangeInput}
             className='customTextField'
-            helperText={true ? 'Incorrect username or password' : ''}
           />
+          <Tooltip title='*Your password must be at least 5 characters including a lowercase letter, an uppercase letter, and a number'>
+            <TextField
+              margin='normal'
+              required
+              fullWidth
+              name='password'
+              label='Password'
+              type='password'
+              id='password'
+              value={password}
+              onChange={handleChangeInput}
+              autoComplete='current-password'
+              className='customTextField'
+            />
+          </Tooltip>
           <TextField
-            error={true}
-            margin='normal'
-            required
-            fullWidth
-            name='password'
-            label='Password'
-            type='password'
-            id='password'
-            autoComplete='current-password'
-            className='customTextField'
-            helperText={true ? 'Incorrect username or password' : ''}
-          />
-          <TextField
-            error={true}
             margin='normal'
             required
             fullWidth
             name='confirmPassword'
             label='Confirm Password'
-            type='confirmPassword'
+            type='password'
             id='confirmPassword'
+            value={confirmPassword}
+            onChange={handleChangeInput}
             className='customTextField'
-            helperText={true ? 'Incorrect username or password' : ''}
           />
-          <TextField
-            error={true}
-            margin='normal'
-            required
-            fullWidth
-            id='username'
-            label='Username'
-            name='username'
-            className='customTextField'
-            helperText={true ? 'Incorrect username or password' : ''}
-          />
-          <span className='mt-2 ml-1'>{`hello`}</span>
+          {err && (
+            <Alert severity='error'>
+              <strong>{user.err}</strong>
+            </Alert>
+          )}
+          {success && (
+            <Alert severity='success'>
+              <strong>{user.success}</strong>
+            </Alert>
+          )}
           <Button
             type='submit'
             fullWidth
@@ -124,6 +207,7 @@ const SignUp = () => {
             variant='contained'
             sx={{ mt: 3, mb: 2, py: 2 }}
             className='font-dynaPuff bg-grey-dark rounded-xl hover:bg-grey-darkHover text-lg'
+            onClick={handleSubmit}
           >
             Sign Up
           </Button>

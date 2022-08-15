@@ -1,34 +1,26 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 
-axios.defaults.baseURL = 'http://localhost:5000/api';
+const axiosJWT = axios.create({
+  baseURL: 'http://localhost:5000/nth/api/v1',
+  withCredentials: true,
+});
 
-let refresh = false;
-
-axios.interceptors.response.use(
-  (res) => res,
-  async (error) => {
+axiosJWT.interceptors.request.use(
+  async (config: AxiosRequestConfig) => {
     console.log('interceptors');
     const firstLogin = localStorage.getItem('firstLogin');
-    if (error.response.status === 401 && !refresh && firstLogin) {
-      refresh = true;
-
-      const response = await axios.post(
-        '/auth/refreshToken',
+    if (firstLogin) {
+      const res = await axios.post(
+        'nth/api/v1/auth/refreshToken',
         {},
         { withCredentials: true }
       );
 
-      if (response.status === 200) {
-        axios.defaults.headers.common[
-          'Authorization'
-        ] = `Bearer ${response.data.accessToken}`;
-
-        console.log(response.data);
-
-        return axios(error.config);
+      if (res.status === 200) {
+        config.headers!.Authorization = `Bearer ${res.data.accessToken}`;
       }
     }
-    refresh = true;
-    return error;
-  }
+    return config;
+  },
+  (err) => Promise.reject(err)
 );

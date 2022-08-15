@@ -32,7 +32,10 @@ function App() {
         <Route path='/sign-in' element={<SignIn />} />
         <Route path='/forgotPassword' element={<ForgotPassword />} />
         <Route path='/user/resetPassword' element={<ResetPassword />} />
-        <Route path='/user/activate' element={<ActivationEmail />} />
+        <Route
+          path='/user/activate/:activationToken'
+          element={<ActivationEmail />}
+        />
         <Route path='/*' element={<Error />} />
       </Routes>
     </Router>

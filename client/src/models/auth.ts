@@ -4,7 +4,6 @@ export interface Register {
   password: string;
   firstName: string;
   lastName: string;
-  avatar?: string;
 }
 
 export interface Login {
