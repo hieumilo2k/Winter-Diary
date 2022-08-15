@@ -13,7 +13,7 @@ async function bootstrap() {
     credentials: true,
   });
   app.use(cookieParser());
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix('nth/api/v1');
   await app.listen(5000);
 }
 bootstrap();

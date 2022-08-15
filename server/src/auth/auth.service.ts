@@ -38,7 +38,7 @@ export class AuthService {
     const activationToken = this.authRepository.createActivationToken(newUser);
     const url = `${this.configService.get(
       'CLIENT_URL',
-    )}/api/auth/activate/${activationToken}`;
+    )}/user/activate/${activationToken}`;
     this.authRepository.sendEmail(email, url, 'Verify your email address');
     return { msg: 'Register Success! Please activate your email to start.' };
   }

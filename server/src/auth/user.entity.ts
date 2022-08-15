@@ -21,7 +21,10 @@ export class User extends Document {
   @Prop({ required: true, trim: true })
   lastName: string;
 
-  @Prop()
+  @Prop({
+    default:
+      'https://res.cloudinary.com/wintersonata/image/upload/v1660557389/WinterDiary/winterdiary_imgDefault.gif',
+  })
   avatar: string;
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Diary' }] })

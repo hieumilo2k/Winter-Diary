@@ -40,7 +40,7 @@ export class AuthController {
     if (!refreshToken)
       return res.status(400).json({ msg: 'Please login now!' });
     const { accessToken } = await this.authService.getAccessToken(refreshToken);
-    return res.json({ accessToken });
+    return res.status(200).json({ accessToken });
   }
 
   @Post('/forgot')
