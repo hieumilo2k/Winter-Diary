@@ -1,6 +1,15 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Home, SignIn, SignUp, Error, ProtectedRoute } from './pages';
+import {
+  Home,
+  SignIn,
+  SignUp,
+  Error,
+  ForgotPassword,
+  ResetPassword,
+  ActivationEmail,
+  ProtectedRoute,
+} from './pages';
 import { AddDiary, AllDiaries, Profile } from './pages/dashboard';
 
 function App() {
@@ -21,6 +30,9 @@ function App() {
         </Route>
         <Route path='/sign-up' element={<SignUp />} />
         <Route path='/sign-in' element={<SignIn />} />
+        <Route path='/forgotPassword' element={<ForgotPassword />} />
+        <Route path='/user/resetPassword' element={<ResetPassword />} />
+        <Route path='/user/activate' element={<ActivationEmail />} />
         <Route path='/*' element={<Error />} />
       </Routes>
     </Router>

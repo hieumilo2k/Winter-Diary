@@ -4,18 +4,14 @@ import {
   Avatar,
   Box,
   Button,
-  Checkbox,
   Container,
   CssBaseline,
-  FormControlLabel,
-  Grid,
   TextField,
   Typography,
 } from '@mui/material';
-
 import { Logo } from '../components';
 
-const SignIn = () => {
+const ResetPassword = () => {
   return (
     <Container
       component='main'
@@ -36,21 +32,9 @@ const SignIn = () => {
           </Link>
         </Avatar>
         <Typography component='h1' variant='h2' className='font-oleo-script'>
-          Sign in
+          Reset Password
         </Typography>
         <Box component='form' noValidate sx={{ mt: 1 }}>
-          <TextField
-            error={true}
-            margin='normal'
-            required
-            fullWidth
-            id='username'
-            label='Username'
-            name='username'
-            autoFocus
-            className='customTextField'
-            helperText={true ? 'Incorrect username or password' : ''}
-          />
           <TextField
             error={true}
             margin='normal'
@@ -64,10 +48,18 @@ const SignIn = () => {
             className='customTextField'
             helperText={true ? 'Incorrect username or password' : ''}
           />
-          {/* <FormControlLabel
-            control={<Checkbox value='remember' color='primary' />}
-            label='Remember me'
-          /> */}
+          <TextField
+            error={true}
+            margin='normal'
+            required
+            fullWidth
+            name='confirmPassword'
+            label='Confirm Password'
+            type='confirmPassword'
+            id='confirmPassword'
+            className='customTextField'
+            helperText={true ? 'Incorrect username or password' : ''}
+          />
           <span className='mt-2 ml-1'>{`hello`}</span>
           <Button
             type='submit'
@@ -77,31 +69,12 @@ const SignIn = () => {
             sx={{ mt: 3, mb: 2, py: 2 }}
             className='font-dynaPuff bg-grey-dark rounded-xl hover:bg-grey-darkHover text-lg'
           >
-            Sign In
+            Reset Password
           </Button>
-          <Grid container className='mt-8'>
-            <Grid item xs>
-              <Link
-                to='/forgotPassword'
-                className='text-base font-semibold hover:text-grey-darkHover'
-              >
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              Don't have an account ? {''}
-              <Link
-                to='/sign-up'
-                className='text-base font-semibold hover:text-grey-darkHover'
-              >
-                Sign Up
-              </Link>
-            </Grid>
-          </Grid>
         </Box>
       </Box>
     </Container>
   );
 };
 
-export default SignIn;
+export default ResetPassword;
