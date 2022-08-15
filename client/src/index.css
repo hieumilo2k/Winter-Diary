@@ -2,14 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Cabin&family=Roboto+Condensed:wght@400;700&display=swap');
 /* - font PermanentMarker */
 @import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
 /* ---------------------- */
-
 /* - font OleoScriptSwash */
 @import url('https://fonts.googleapis.com/css2?family=Oleo+Script+Swash+Caps&display=swap');
 /* ---------------------- */
-@import url('https://fonts.googleapis.com/css2?family=Cabin&family=Roboto+Condensed:wght@400;700&display=swap');
+/* - font DynaPuff */
+@import url('https://fonts.googleapis.com/css2?family=DynaPuff&display=swap');
+/* ---------------------- */
 
 body {
   background-image: url('./assets/background.png');
@@ -137,3 +139,14 @@ body {
   transform: translateX(0);
 }
 /* ----- */
+
+/* Custom TextField Material UI */
+.customTextField div {
+  border-radius: 12px;
+}
+
+.customTextField div input {
+  padding-left: 20px;
+  font-family: 'Cabin', Sans-Serif;
+}
+/* ---------------- */

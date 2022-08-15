@@ -7,6 +7,7 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import { TogglePerson, Sidebar } from '../components';
+import { Avatar } from '@mui/material';
 
 const Home = () => {
   const [openSidebar, setOpenSidebar] = useState(false);
@@ -20,7 +21,6 @@ const Home = () => {
 
   const handleClickMenu = (event: React.MouseEvent<HTMLElement>) => {
     setOpenSidebar((previousOpen) => !previousOpen);
-    console.log(openSidebar);
   };
 
   const canBeOpen = openPerson && Boolean(anchorEl);
@@ -47,6 +47,11 @@ const Home = () => {
             onClick={handleClickPerson}
           >
             <PersonIcon className='text-white-F1 m-[35px] text-5xl cursor-pointer hover:scale-125' />
+            {/* <Avatar
+              className='m-[36px] hover:scale-125'
+              sx={{ width: 60, height: 60 }}
+              src='https://res.cloudinary.com/wintersonata/image/upload/v1660557389/WinterDiary/winterdiary_imgDefault.gif'
+            /> */}
           </button>
         </div>
       </div>

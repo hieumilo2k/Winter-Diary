@@ -18,11 +18,14 @@ module.exports = {
       },
       grey: {
         dark: '#2C3333',
+        darkHover: '#111313',
       },
     },
     fontFamily: {
       'permanent-marker': ['Permanent Marker', 'cursive'],
       'oleo-script': ['Oleo Script Swash Caps', 'cursive'],
+      dynaPuff: ['DynaPuff', 'cursive'],
+      'Cabin-Regular': ['Cabin', 'sans-serif'],
     },
     extend: {},
   },
