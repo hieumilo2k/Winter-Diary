@@ -4,6 +4,9 @@ import Box from '@mui/material/Box';
 import Popper from '@mui/material/Popper';
 import Fade from '@mui/material/Fade';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
+import { useAppSelector } from '../app/hooks';
+import { AppState } from '../app/store';
+import authApi from '../api/authApi';
 
 interface TogglePersonProps {
   openPerson: boolean;
@@ -18,8 +21,13 @@ const TogglePerson: React.FC<TogglePersonProps> = ({
   id,
   setOpenPerson,
 }) => {
+  const { isLogged } = useAppSelector((state: AppState) => state.auth);
   const handleClickAway = () => {
     setOpenPerson(false);
+  };
+
+  const handleLogout = async () => {
+    return await authApi.logout();
   };
 
   return (
@@ -37,12 +45,34 @@ const TogglePerson: React.FC<TogglePersonProps> = ({
                 }}
               >
                 <div className='flex flex-col text-white-F1 font-semibold text-xl m-2'>
-                  <Link to='/sign-in' className='mb-2 hover:text-green-dark'>
-                    Sign in
-                  </Link>
-                  <Link to='/sign-up' className='hover:text-green-dark'>
-                    Sign up
-                  </Link>
+                  {isLogged ? (
+                    <>
+                      <Link
+                        to='/profile'
+                        className='mb-2 hover:text-green-dark'
+                      >
+                        Profile
+                      </Link>
+                      <button
+                        className='hover:text-green-dark'
+                        onClick={handleLogout}
+                      >
+                        Logout
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <Link
+                        to='/sign-in'
+                        className='mb-2 hover:text-green-dark'
+                      >
+                        Sign in
+                      </Link>
+                      <Link to='/sign-up' className='hover:text-green-dark'>
+                        Sign up
+                      </Link>
+                    </>
+                  )}
                 </div>
               </Box>
             </Fade>

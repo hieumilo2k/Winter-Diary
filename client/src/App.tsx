@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { authActions } from './app/features/auth/authSlice';
-import { useAppDispatch } from './app/hooks';
+import { userActions } from './app/features/user/userSlice';
+import { useAppDispatch, useAppSelector } from './app/hooks';
+import { AppState } from './app/store';
 import {
   Home,
   SignIn,
@@ -10,12 +12,12 @@ import {
   ForgotPassword,
   ResetPassword,
   ActivationEmail,
-  ProtectedRoute,
 } from './pages';
 import { AddDiary, AllDiaries, Profile } from './pages/dashboard';
 
 function App() {
   const dispatch = useAppDispatch();
+  const { isLogged } = useAppSelector((state: AppState) => state.auth);
 
   useEffect(() => {
     const firstLogin =
@@ -23,27 +25,29 @@ function App() {
       sessionStorage.getItem('firstLogin');
     if (firstLogin) {
       dispatch(authActions.loginSuccess(true));
+      dispatch(userActions.getUserStart());
     }
-  }, [dispatch]);
+  }, [isLogged, dispatch]);
 
   return (
     <Router>
       <Routes>
         <Route path='/' element={<Home />} />
         <Route
-          element={
-            <ProtectedRoute>
-              <Home />
-            </ProtectedRoute>
-          }
-        >
-          <Route path='/all-diaries' element={<AllDiaries />} />
-          <Route path='/profile' element={<Profile />} />
-          <Route path='/add-diary/:docId' element={<AddDiary />} />
-        </Route>
-        <Route path='/sign-up' element={<SignUp />} />
-        <Route path='/sign-in' element={<SignIn />} />
-        <Route path='/forgotPassword' element={<ForgotPassword />} />
+          path='/all-diaries'
+          element={isLogged ? <AllDiaries /> : <SignIn />}
+        />
+        <Route path='/profile' element={isLogged ? <Profile /> : <SignIn />} />
+        <Route
+          path='/add-diary/:docId'
+          element={isLogged ? <AddDiary /> : <SignIn />}
+        />
+        <Route path='/sign-up' element={isLogged ? <Home /> : <SignUp />} />
+        <Route path='/sign-in' element={isLogged ? <Home /> : <SignIn />} />
+        <Route
+          path='/forgotPassword'
+          element={isLogged ? <Home /> : <ForgotPassword />}
+        />
         <Route path='/user/resetPassword/:token' element={<ResetPassword />} />
         <Route
           path='/user/activate/:activationToken'

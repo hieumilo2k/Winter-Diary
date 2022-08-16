@@ -7,7 +7,6 @@ const axiosJWT = axios.create({
 
 axiosJWT.interceptors.request.use(
   async (config: AxiosRequestConfig) => {
-    console.log('interceptors');
     const firstLogin =
       localStorage.getItem('firstLogin') ||
       sessionStorage.getItem('firstLogin');
@@ -26,3 +25,5 @@ axiosJWT.interceptors.request.use(
   },
   (err) => Promise.reject(err)
 );
+
+export default axiosJWT;
