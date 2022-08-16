@@ -7,6 +7,7 @@ function* loginSaga(action: PayloadAction<string>): any {
     const data = action.payload;
     if (data) {
       yield put(authActions.loginSuccess(true));
+      window.location.href = '/';
     } else {
       yield put(authActions.loginFailed());
     }

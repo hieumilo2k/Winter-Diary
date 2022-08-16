@@ -1,10 +1,9 @@
-import axios from 'axios';
+import axiosJWT from '../interceptors/axios';
 
 const userApi = {
-  getCurrentUser: async (token: string) => {
-    try {
-      const res = await axios.get('/user/profile');
-      console.log(res);
-    } catch (error) {}
+  getCurrentUser: async () => {
+    return await axiosJWT.get('/user/profile');
   },
 };
+
+export default userApi;

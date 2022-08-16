@@ -29,6 +29,12 @@ const authApi = {
       }
     );
   },
+  logout: async () => {
+    await axios.get('nth/api/v1/auth/logout');
+    localStorage.removeItem('firstLogin');
+    sessionStorage.removeItem('firstLogin');
+    window.location.href = '/';
+  },
 };
 
 export default authApi;

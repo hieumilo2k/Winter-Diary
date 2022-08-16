@@ -8,11 +8,15 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import { TogglePerson, Sidebar } from '../components';
 import { Avatar } from '@mui/material';
+import { useAppSelector } from '../app/hooks';
+import { AppState } from '../app/store';
 
 const Home = () => {
   const [openSidebar, setOpenSidebar] = useState(false);
   const [openPerson, setOpenPerson] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const { isLogged } = useAppSelector((state: AppState) => state.auth);
+  const { user } = useAppSelector((state: AppState) => state.user);
 
   const handleClickPerson = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -46,12 +50,15 @@ const Home = () => {
             aria-describedby={idTogglePerson}
             onClick={handleClickPerson}
           >
-            <PersonIcon className='text-white-F1 m-[35px] text-5xl cursor-pointer hover:scale-125' />
-            {/* <Avatar
-              className='m-[36px] hover:scale-125'
-              sx={{ width: 60, height: 60 }}
-              src='https://res.cloudinary.com/wintersonata/image/upload/v1660557389/WinterDiary/winterdiary_imgDefault.gif'
-            /> */}
+            {isLogged ? (
+              <Avatar
+                className='m-[36px] hover:scale-125'
+                sx={{ width: 60, height: 60 }}
+                src={user.avatar}
+              />
+            ) : (
+              <PersonIcon className='text-white-F1 m-[35px] text-5xl cursor-pointer hover:scale-125' />
+            )}
           </button>
         </div>
       </div>

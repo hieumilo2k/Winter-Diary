@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Alert,
   Avatar,
@@ -17,9 +17,8 @@ import {
 import { Logo } from '../components';
 import authApi from '../api/authApi';
 import { AxiosError } from 'axios';
-import { useAppDispatch, useAppSelector } from '../app/hooks';
+import { useAppDispatch } from '../app/hooks';
 import { authActions } from '../app/features/auth/authSlice';
-import { AppState } from '../app/store';
 
 const initialState = {
   username: '',
@@ -31,9 +30,7 @@ const initialState = {
 const SignIn = () => {
   const [user, setUser] = useState(initialState);
   const [rememberMe, setRememberMe] = useState(false);
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { isLogged } = useAppSelector((state: AppState) => state.auth);
 
   const { username, password, err, success } = user;
 
@@ -61,12 +58,6 @@ const SignIn = () => {
       data?.message && setUser({ ...user, err: data?.message, success: '' });
     }
   };
-
-  useEffect(() => {
-    if (isLogged) {
-      navigate('/');
-    }
-  }, [isLogged, navigate]);
 
   return (
     <Container

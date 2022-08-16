@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import 'react-calendar/dist/Calendar.css';
+
 @import url('https://fonts.googleapis.com/css2?family=Cabin&family=Roboto+Condensed:wght@400;700&display=swap');
 /* - font PermanentMarker */
 @import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
@@ -150,3 +152,34 @@ body {
   font-family: 'Cabin', Sans-Serif;
 }
 /* ---------------- */
+
+/* Calendar */
+.calendar div > .react-calendar__tile--active {
+  background-color: #006edc !important;
+  border-radius: 10px;
+}
+.calendar div > .react-calendar__tile:hover {
+  background-color: transparent;
+  border-radius: 24%;
+}
+.calendar div > .react-calendar__tile:enabled:hover {
+  background-color: transparent;
+  border-radius: 24%;
+}
+.calendar div > .react-calendar__tile:enabled:focus {
+  background-color: transparent;
+  border-radius: 24%;
+}
+.calendar div > .react-calendar__tile--now {
+  background-color: #ffcb42;
+  border-radius: 24%;
+}
+.calendar div > .react-calendar__tile--now:hover {
+  background-color: #ffb200 !important;
+  border-radius: 24%;
+}
+.calendar div > .react-calendar__tile--active.react-calendar__tile--now:hover {
+  background-color: #006edc !important;
+  border-radius: 24%;
+}
+/* -------- */
