@@ -1,6 +1,7 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import {
+  Alert,
   Avatar,
   Box,
   Button,
@@ -10,8 +11,72 @@ import {
   Typography,
 } from '@mui/material';
 import { Logo } from '../components';
+import { isMatch, isPassword } from '../utils/validation/Validation';
+import authApi from '../api/authApi';
+import { AxiosError } from 'axios';
+
+const initialState = {
+  password: '',
+  confirmPassword: '',
+  err: '',
+  success: '',
+};
 
 const ResetPassword = () => {
+  const [data, setData] = useState(initialState);
+  const { token } = useParams();
+
+  const { password, confirmPassword, err, success } = data;
+
+  const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setData({ ...data, [name]: value, err: '', success: '' });
+  };
+
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isPassword(password)) {
+      return setData({
+        ...data,
+        err: 'Invalid Password.',
+        success: '',
+      });
+    }
+
+    if (!isMatch(password, confirmPassword)) {
+      return setData({
+        ...data,
+        err: 'Password did not match.',
+        success: '',
+      });
+    }
+
+    try {
+      if (token) {
+        const { data } = await authApi.resetPassword(token, password);
+        setData({
+          password: '',
+          confirmPassword: '',
+          err: '',
+          success: data.msg,
+        });
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 3000);
+      }
+    } catch (error) {
+      const err = error as AxiosError;
+      const res: any = err.response?.data;
+      res?.message &&
+        setData({
+          password: '',
+          confirmPassword: '',
+          err: res.message,
+          success: '',
+        });
+    }
+  };
+
   return (
     <Container
       component='main'
@@ -36,7 +101,6 @@ const ResetPassword = () => {
         </Typography>
         <Box component='form' noValidate sx={{ mt: 1 }}>
           <TextField
-            error={true}
             margin='normal'
             required
             fullWidth
@@ -44,23 +108,35 @@ const ResetPassword = () => {
             label='Password'
             type='password'
             id='password'
+            value={password}
+            onChange={handleChangeInput}
             autoComplete='current-password'
             className='customTextField'
-            helperText={true ? 'Incorrect username or password' : ''}
           />
           <TextField
-            error={true}
             margin='normal'
             required
             fullWidth
             name='confirmPassword'
             label='Confirm Password'
-            type='confirmPassword'
+            type='password'
             id='confirmPassword'
+            value={confirmPassword}
+            onChange={handleChangeInput}
             className='customTextField'
-            helperText={true ? 'Incorrect username or password' : ''}
           />
-          <span className='mt-2 ml-1'>{`hello`}</span>
+          <div className='mt-1'>
+            {err && (
+              <Alert severity='error'>
+                <strong>{data.err}</strong>
+              </Alert>
+            )}
+            {success && (
+              <Alert severity='success'>
+                <strong>{data.success}</strong>
+              </Alert>
+            )}
+          </div>
           <Button
             type='submit'
             fullWidth
@@ -68,6 +144,7 @@ const ResetPassword = () => {
             variant='contained'
             sx={{ mt: 3, mb: 2, py: 2 }}
             className='font-dynaPuff bg-grey-dark rounded-xl hover:bg-grey-darkHover text-lg'
+            onClick={handleResetPassword}
           >
             Reset Password
           </Button>

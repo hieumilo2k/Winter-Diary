@@ -1,9 +1,20 @@
-import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { ActivateEmailDto } from './dtos/activateEmail.dto';
 import { CreateUserDto } from './dtos/createUser.dto';
 import { SignInUserDto } from './dtos/signInUser.dto';
+import { GetUser } from './get-user.decorator';
+import { User } from './user.entity';
 
 @Controller('auth')
 export class AuthController {
@@ -49,21 +60,21 @@ export class AuthController {
     return res.json(data);
   }
 
+  @UseGuards(AuthGuard())
   @Post('/resetPassword')
   async resetPassword(
     @Body('password') password: string,
     @Res() res: Response,
+    @GetUser() user: User,
   ) {
-    const data = await this.authService.resetPassword(
-      '62f62dc4bdde341d632f3f20',
-      password,
-    );
+    const { _id: id } = user;
+    const data = await this.authService.resetPassword(id, password);
     return res.json(data);
   }
 
   @Get('/logout')
   logout(@Res() res: Response) {
-    res.clearCookie('refreshToken', { path: '/api/auth/refreshToken' });
+    res.clearCookie('refreshToken', { path: 'nth/api/v1/auth/refreshToken' });
     return res.json({ msg: 'Logout success!' });
   }
 }

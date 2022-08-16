@@ -109,7 +109,7 @@ export class AuthService {
     //send Mail
     const url = `${this.configService.get(
       'CLIENT_URL',
-    )}/api/auth/resetPassword/${accessToken}`;
+    )}/user/resetPassword/${accessToken}`;
     this.authRepository.sendEmail(email, url, 'Reset your password');
 
     return { msg: 'Please check your email to reset your password.' };
