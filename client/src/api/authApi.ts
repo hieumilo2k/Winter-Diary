@@ -15,6 +15,20 @@ const authApi = {
     );
     // do đường dẫn cũ từ email + '/' ra khác đường dẫn api
   },
+  forgotPassword: async (email: string) => {
+    return await axios.post('nth/api/v1/auth/forgot', { email });
+  },
+  resetPassword: async (token: string, password: string) => {
+    return await axios.post(
+      `${process.env.REACT_APP_CLIENT_URL}/nth/api/v1/auth/resetPassword`,
+      { password },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+  },
 };
 
 export default authApi;

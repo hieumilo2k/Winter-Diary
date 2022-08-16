@@ -44,7 +44,7 @@ function App() {
         <Route path='/sign-up' element={<SignUp />} />
         <Route path='/sign-in' element={<SignIn />} />
         <Route path='/forgotPassword' element={<ForgotPassword />} />
-        <Route path='/user/resetPassword' element={<ResetPassword />} />
+        <Route path='/user/resetPassword/:token' element={<ResetPassword />} />
         <Route
           path='/user/activate/:activationToken'
           element={<ActivationEmail />}

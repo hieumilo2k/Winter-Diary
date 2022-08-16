@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
+  Alert,
+  AlertTitle,
   Avatar,
   Box,
   Button,
@@ -10,8 +12,39 @@ import {
   Typography,
 } from '@mui/material';
 import { Logo } from '../components';
+import { isEmail } from '../utils/validation/Validation';
+import authApi from '../api/authApi';
+import { AxiosError } from 'axios';
+
+const initialState = {
+  email: '',
+  err: '',
+  success: '',
+};
 
 const ForgotPassword = () => {
+  const [data, setData] = useState(initialState);
+  const { email, err, success } = data;
+
+  const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setData({ ...data, [name]: value, err: '', success: '' });
+  };
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isEmail(email))
+      return setData({ ...data, err: 'Invalid email.', success: '' });
+    try {
+      const res = await authApi.forgotPassword(email);
+      return setData({ ...data, err: '', success: res.data.msg });
+    } catch (error) {
+      const err = error as AxiosError;
+      const res: any = err.response?.data;
+      res?.message && setData({ ...data, err: res.message, success: '' });
+    }
+  };
+
   return (
     <Container
       component='main'
@@ -36,24 +69,31 @@ const ForgotPassword = () => {
         </Typography>
         <Box component='form' noValidate sx={{ mt: 1 }}>
           <TextField
-            error={true}
             margin='normal'
             required
             fullWidth
             id='email'
             label='Email'
             name='email'
+            value={email}
+            onChange={handleChangeInput}
             autoFocus
             className='customTextField'
-            helperText={true ? 'Incorrect username or password' : ''}
           />
-          <span className='mt-2 ml-1'>{`hello`}</span>
-          {/* <p className='text-xl text-center my-5'>Reset Password Success !</p> */}
-          {/* <p className='text-xl text-center my-5'>
-            We've sent an email to {'@email'} to verify your email address and
-            activate your account. The link in the email will expire in 24
-            hours.{' '}
-          </p> */}
+          {success && (
+            <Alert severity='success' className='my-5'>
+              <AlertTitle>
+                <strong className='text-base text-center'>{success}</strong>
+              </AlertTitle>
+            </Alert>
+          )}
+          {err && (
+            <Alert severity='error' className='my-5'>
+              <AlertTitle>
+                <strong className='text-base text-center'>{err}</strong>
+              </AlertTitle>
+            </Alert>
+          )}
           <Button
             type='submit'
             fullWidth
@@ -61,6 +101,7 @@ const ForgotPassword = () => {
             variant='contained'
             sx={{ mt: 3, mb: 2, py: 2 }}
             className='font-dynaPuff bg-grey-dark rounded-xl hover:bg-grey-darkHover text-lg'
+            onClick={handleForgotPassword}
           >
             Verify your email
           </Button>
