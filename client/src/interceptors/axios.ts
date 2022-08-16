@@ -8,7 +8,9 @@ const axiosJWT = axios.create({
 axiosJWT.interceptors.request.use(
   async (config: AxiosRequestConfig) => {
     console.log('interceptors');
-    const firstLogin = localStorage.getItem('firstLogin');
+    const firstLogin =
+      localStorage.getItem('firstLogin') ||
+      sessionStorage.getItem('firstLogin');
     if (firstLogin) {
       const res = await axios.post(
         'nth/api/v1/auth/refreshToken',

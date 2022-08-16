@@ -74,10 +74,11 @@ export class AuthService {
     const { username, password } = signInUserDto;
     const user = await this.userModel.findOne({ username });
 
-    if (!user) throw new BadRequestException('This email does not exits.');
+    if (!user) throw new BadRequestException('username or password incorrect.');
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) throw new BadRequestException('Password is incorrect.');
+    if (!isMatch)
+      throw new BadRequestException('username or password incorrect.');
 
     const refreshToken = this.authRepository.createRefreshToken({
       id: user._id,

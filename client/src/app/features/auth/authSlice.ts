@@ -1,12 +1,15 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Login } from '../../../models';
 
 interface AuthState {
+  isLogged: boolean;
   loading: boolean;
   success: boolean;
   error: boolean;
 }
 
 const initialState: AuthState = {
+  isLogged: false,
   loading: false,
   success: false,
   error: false,
@@ -16,11 +19,12 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    loginStart(state) {
+    loginStart(state, action: PayloadAction<Login>) {
       state.loading = true;
     },
-    loginSuccess(state) {
+    loginSuccess(state, action: PayloadAction<boolean>) {
       state.loading = false;
+      state.isLogged = action.payload;
       state.success = true;
     },
     loginFailed(state) {
