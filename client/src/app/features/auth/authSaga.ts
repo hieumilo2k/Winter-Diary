@@ -1,17 +1,12 @@
 import { PayloadAction } from '@reduxjs/toolkit';
-import { call, put, takeLatest } from 'redux-saga/effects';
-import authApi from '../../../api/authApi';
-import { Login } from '../../../models';
+import { put, takeLatest } from 'redux-saga/effects';
 import { authActions } from './authSlice';
 
-function* loginSaga(action: PayloadAction<Login>): any {
+function* loginSaga(action: PayloadAction<string>): any {
   try {
-    const res = yield call(authApi.signIn, action.payload);
-    console.log('saga', res);
-    if (res && res.status === 200) {
-      yield put(authActions.loginSuccess());
-      localStorage.setItem('firstLogin', 'true');
-      window.location.href = '/';
+    const data = action.payload;
+    if (data) {
+      yield put(authActions.loginSuccess(true));
     } else {
       yield put(authActions.loginFailed());
     }

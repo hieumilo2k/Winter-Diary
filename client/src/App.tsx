@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { authActions } from './app/features/auth/authSlice';
+import { useAppDispatch } from './app/hooks';
 import {
   Home,
   SignIn,
@@ -13,6 +15,17 @@ import {
 import { AddDiary, AllDiaries, Profile } from './pages/dashboard';
 
 function App() {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const firstLogin =
+      localStorage.getItem('firstLogin') ||
+      sessionStorage.getItem('firstLogin');
+    if (firstLogin) {
+      dispatch(authActions.loginSuccess(true));
+    }
+  }, [dispatch]);
+
   return (
     <Router>
       <Routes>

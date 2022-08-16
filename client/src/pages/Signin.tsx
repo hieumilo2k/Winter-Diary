@@ -1,6 +1,7 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import {
+  Alert,
   Avatar,
   Box,
   Button,
@@ -14,8 +15,59 @@ import {
 } from '@mui/material';
 
 import { Logo } from '../components';
+import authApi from '../api/authApi';
+import { AxiosError } from 'axios';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
+import { authActions } from '../app/features/auth/authSlice';
+import { AppState } from '../app/store';
+
+const initialState = {
+  username: '',
+  password: '',
+  err: '',
+  success: '',
+};
 
 const SignIn = () => {
+  const [user, setUser] = useState(initialState);
+  const [rememberMe, setRememberMe] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { isLogged } = useAppSelector((state: AppState) => state.auth);
+
+  const { username, password, err, success } = user;
+
+  const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setUser({ ...user, [name]: value, err: '', success: '' });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const { data } = await authApi.signIn({ username, password });
+
+      if (rememberMe) {
+        localStorage.setItem('firstLogin', 'true');
+      } else {
+        localStorage.removeItem('firstLogin');
+        sessionStorage.setItem('firstLogin', 'true');
+      }
+      dispatch(authActions.loginStart(data.msg));
+      setUser({ ...user, err: '', success: data.msg });
+    } catch (error) {
+      const err = error as AxiosError;
+      const data: any = err.response?.data;
+      data?.message && setUser({ ...user, err: data?.message, success: '' });
+    }
+  };
+
+  useEffect(() => {
+    if (isLogged) {
+      navigate('/');
+    }
+  }, [isLogged, navigate]);
+
   return (
     <Container
       component='main'
@@ -40,7 +92,6 @@ const SignIn = () => {
         </Typography>
         <Box component='form' noValidate sx={{ mt: 1 }}>
           <TextField
-            error={true}
             margin='normal'
             required
             fullWidth
@@ -48,11 +99,11 @@ const SignIn = () => {
             label='Username'
             name='username'
             autoFocus
+            value={username}
+            onChange={handleChangeInput}
             className='customTextField'
-            helperText={true ? 'Incorrect username or password' : ''}
           />
           <TextField
-            error={true}
             margin='normal'
             required
             fullWidth
@@ -60,15 +111,34 @@ const SignIn = () => {
             label='Password'
             type='password'
             id='password'
+            value={password}
+            onChange={handleChangeInput}
             autoComplete='current-password'
             className='customTextField'
-            helperText={true ? 'Incorrect username or password' : ''}
           />
-          {/* <FormControlLabel
-            control={<Checkbox value='remember' color='primary' />}
+          <FormControlLabel
+            control={
+              <Checkbox
+                value='remember'
+                color='primary'
+                checked={rememberMe}
+                onChange={() => setRememberMe(!rememberMe)}
+              />
+            }
             label='Remember me'
-          /> */}
-          <span className='mt-2 ml-1'>{`hello`}</span>
+          />
+          <div className='mt-1'>
+            {err && (
+              <Alert severity='error'>
+                <strong>{user.err}</strong>
+              </Alert>
+            )}
+            {success && (
+              <Alert severity='success'>
+                <strong>{user.success}</strong>
+              </Alert>
+            )}
+          </div>
           <Button
             type='submit'
             fullWidth
@@ -76,6 +146,7 @@ const SignIn = () => {
             variant='contained'
             sx={{ mt: 3, mb: 2, py: 2 }}
             className='font-dynaPuff bg-grey-dark rounded-xl hover:bg-grey-darkHover text-lg'
+            onClick={handleSubmit}
           >
             Sign In
           </Button>
