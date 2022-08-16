@@ -1,5 +1,6 @@
 import { UpdateUserDto } from './dtos/updateUser.dto';
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -60,7 +61,7 @@ export class UserController {
         }
       },
       limits: {
-        fileSize: 1024 * 1024,
+        fileSize: 2 * 1024 * 1024,
       },
     }),
   )
@@ -73,7 +74,7 @@ export class UserController {
           // new FileTypeValidator({ fileType: /\/(jpg|jpeg|png|gif)$/ }),
         ],
         exceptionFactory(error) {
-          console.log(error);
+          throw new BadRequestException(error);
         },
       }),
     )
