@@ -9,8 +9,8 @@ export interface UserInformation {
 }
 
 export interface UpdateUser {
-  firstName: string;
-  lastName: string;
-  avatar: string;
-  password: string;
+  firstName?: string;
+  lastName?: string;
+  avatar?: null | string;
+  password?: string;
 }

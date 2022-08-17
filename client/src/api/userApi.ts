@@ -5,6 +5,9 @@ const userApi = {
   getCurrentUser: async () => {
     return await axiosJWT.get('/user/profile');
   },
+  updatePassword: async (password: string) => {
+    return await axiosJWT.post('/auth/resetPassword', { password });
+  },
   updateUser: async (update: UpdateUser) => {
     return await axiosJWT.patch('/user/update', update);
   },

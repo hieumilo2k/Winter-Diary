@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Alert,
@@ -37,6 +37,7 @@ const initialState = {
 const Profile = () => {
   const [editUser, setEditUser] = useState(initialState);
   const [loading, setLoading] = useState(false);
+  const [avatar, setAvatar] = useState<null | string>(null);
 
   const navigate = useNavigate();
 
@@ -45,6 +46,16 @@ const Profile = () => {
 
   const { firstName, lastName, password, confirmPassword, err, success } =
     editUser;
+
+  useEffect(() => {
+    setEditUser({
+      ...editUser,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      err: '',
+      success: '',
+    });
+  }, [user.firstName, user.lastName]);
 
   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -72,9 +83,9 @@ const Profile = () => {
         let formData = new FormData();
         formData.append('avatar', image);
         setLoading(true);
-        await userApi.uploadAvatar(formData);
-        dispatch(userActions.getUserStart());
+        const res = await userApi.uploadAvatar(formData);
         setLoading(false);
+        setAvatar(res.data.url);
       } else {
         return setEditUser({
           ...editUser,
@@ -85,16 +96,7 @@ const Profile = () => {
     } catch (error) {}
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (isEmpty(firstName) || isEmpty(lastName) || isEmpty(password)) {
-      return setEditUser({
-        ...editUser,
-        err: 'Please fill in all fields.',
-        success: '',
-      });
-    }
-
+  const updatePassword = async () => {
     if (!isPassword(password)) {
       return setEditUser({
         ...editUser,
@@ -112,18 +114,48 @@ const Profile = () => {
     }
 
     try {
-      // const { data } = await authApi.signUp({
-      //   firstName,
-      //   lastName,
-      //   password,
-      // });
-      // setEditUser({ ...editUser, err: '', success: data.msg });
+      await userApi.updatePassword(password);
+      setEditUser({ ...editUser, err: '', success: 'Updated Success.' });
     } catch (error) {
       const err = error as AxiosError;
       const data: any = err.response?.data;
       data?.message &&
         setEditUser({ ...editUser, err: data?.message, success: '' });
     }
+  };
+
+  const updateInformation = async () => {
+    if (isEmpty(firstName) || isEmpty(lastName)) {
+      return setEditUser({
+        ...editUser,
+        err: 'Please fill in firstName and lastName fields.',
+        success: '',
+      });
+    }
+
+    try {
+      await userApi.updateUser({
+        firstName,
+        lastName,
+        avatar: avatar ? avatar : user.avatar,
+      });
+      setEditUser({ ...editUser, err: '', success: 'Updated Success.' });
+    } catch (error) {
+      const err = error as AxiosError;
+      const data: any = err.response?.data;
+      data?.message &&
+        setEditUser({ ...editUser, err: data?.message, success: '' });
+    }
+  };
+
+  const handleUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password) updatePassword();
+    else updateInformation();
+    setTimeout(() => {
+      dispatch(userActions.getUserStart());
+      setEditUser(initialState);
+    }, 3000);
   };
 
   return (
@@ -143,7 +175,7 @@ const Profile = () => {
         <Typography
           component='h1'
           variant='h2'
-          className='font-oleo-script'
+          className='font-oleo-script cursor-pointer hover:text-grey-darkHover'
           onClick={() => navigate('/')}
         >
           Winter Diary
@@ -152,7 +184,7 @@ const Profile = () => {
           <Avatar
             sx={{ m: 1, width: 120, height: 120 }}
             className='bg-white-F1'
-            src={user.avatar}
+            src={avatar ? avatar : user.avatar}
           />
           <input
             hidden
@@ -166,7 +198,7 @@ const Profile = () => {
           ) : (
             <>
               <label htmlFor='avatar-upload' hidden={false}>
-                <PhotoCameraIcon className='absolute bottom-4 right-9 text-grey-default cursor-pointer z-50 hover:text-grey-dark' />
+                <PhotoCameraIcon className='absolute bg-white-default rounded-full bottom-4 right-9 text-grey-default cursor-pointer z-50 hover:text-grey-dark' />
               </label>
             </>
           )}
@@ -178,7 +210,7 @@ const Profile = () => {
             id='firstName'
             label='First Name'
             name='firstName'
-            value={user.firstName}
+            value={firstName}
             onChange={handleChangeInput}
             className='customTextField mr-5 w-[47%]'
           />
@@ -188,7 +220,7 @@ const Profile = () => {
             id='lastName'
             label='Last Name'
             name='lastName'
-            value={user.lastName}
+            value={lastName}
             onChange={handleChangeInput}
             className='customTextField w-[48%]'
           />
@@ -256,8 +288,13 @@ const Profile = () => {
             variant='contained'
             sx={{ mt: 3, mb: 2, py: 2 }}
             className='font-dynaPuff bg-grey-dark rounded-xl hover:bg-grey-darkHover text-lg disabled:text-white-F1cc'
-            onClick={handleSubmit}
-            disabled
+            onClick={handleUpdate}
+            disabled={
+              loading ||
+              isEmpty(firstName) ||
+              isEmpty(lastName) ||
+              (firstName === user.firstName && lastName === user.lastName)
+            }
           >
             Update Profile
           </Button>
