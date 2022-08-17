@@ -9,6 +9,7 @@ module.exports = {
       white: {
         default: '#FFFFFF',
         F1: '#F1F1F1',
+        F1cc: '#F1F1F1cc',
       },
       green: {
         dark: '#A0C334',
@@ -17,6 +18,7 @@ module.exports = {
         fb: '#4267B2',
       },
       grey: {
+        default: '#73777B',
         dark: '#2C3333',
         darkHover: '#111313',
       },
