@@ -7,3 +7,10 @@ export interface UserInformation {
   avatar: string;
   diaries: [];
 }
+
+export interface UpdateUser {
+  firstName?: string;
+  lastName?: string;
+  avatar?: null | string;
+  password?: string;
+}
