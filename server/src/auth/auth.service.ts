@@ -25,7 +25,10 @@ export class AuthService {
     const { username, email, password, firstName, lastName } = createUserDto;
 
     const user = await this.userModel.findOne({ email });
+    const checkUsername = await this.userModel.findOne({ username });
     if (user) throw new BadRequestException('This email already exists');
+    if (checkUsername)
+      throw new BadRequestException('This username already exists');
 
     const newUser: ActivationTokenDto = {
       email,

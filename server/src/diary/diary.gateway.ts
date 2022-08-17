@@ -28,8 +28,7 @@ export class DiaryGateway
 
   async handleConnection(client: Socket) {
     const clientId = client.id.toString();
-    const accessToken = client.handshake.auth?.token;
-    const userId = await this.diaryService.getCurrentUserId(accessToken);
+    const userId = client.handshake.auth?.id;
     if (!userId) {
       return this.disconnect(client);
     }
@@ -53,7 +52,8 @@ export class DiaryGateway
     @MessageBody() ident: string,
     @ConnectedSocket() client: Socket,
   ) {
-    const diary = await this.diaryService.findOrCreateDocument(ident);
+    const userId = client.handshake.auth.id;
+    const diary = await this.diaryService.findOrCreateDocument(ident, userId);
     client.join(ident);
     client.emit('load-diary', diary.data);
 
