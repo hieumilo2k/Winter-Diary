@@ -19,9 +19,11 @@ function* getCurrentUserSaga(action: PayloadAction<string>): any {
       yield put(userActions.getUserSuccess(user));
     } else {
       yield put(userActions.getUserFailed());
+      console.log('irene');
     }
   } catch (error) {
     yield put(userActions.getUserFailed());
+    console.log('irene');
   }
 }
 

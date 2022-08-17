@@ -28,6 +28,8 @@ module.exports = {
       'oleo-script': ['Oleo Script Swash Caps', 'cursive'],
       dynaPuff: ['DynaPuff', 'cursive'],
       'Cabin-Regular': ['Cabin', 'sans-serif'],
+      'Roboto-Slab': ['Roboto Slab', 'serif'],
+      'Lobster-Regular': ['Lobster', 'cursive'],
     },
     extend: {},
   },

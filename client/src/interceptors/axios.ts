@@ -12,7 +12,7 @@ axiosJWT.interceptors.request.use(
       sessionStorage.getItem('firstLogin');
     if (firstLogin) {
       const res = await axios.post(
-        'nth/api/v1/auth/refreshToken',
+        `${process.env.REACT_APP_CLIENT_URL}/nth/api/v1/auth/refreshToken`,
         {},
         { withCredentials: true }
       );
