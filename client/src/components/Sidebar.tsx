@@ -58,7 +58,7 @@ const Sidebar: React.FC<SidebarProps> = ({ openSidebar, setOpenSidebar }) => {
               onClick={() => navigate('/profile')}
             />
             <h1
-              className='text-2xl font-dynaPuff cursor-pointer'
+              className='text-[26px] font-Lobster-Regular cursor-pointer'
               onClick={() => navigate('/profile')}
             >{`${user.firstName} ${user.lastName}`}</h1>
           </div>

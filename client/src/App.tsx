@@ -40,12 +40,9 @@ function App() {
         <Route path='/' element={<Home />} />
         <Route
           path='/all-diaries'
-          element={isLogged ? <AllDiaries /> : <Navigate to='/sign-in' />}
+          element={isLogged ? <AllDiaries /> : <SignIn />}
         />
-        <Route
-          path='/profile'
-          element={isLogged ? <Profile /> : <Navigate to='/sign-in' />}
-        />
+        <Route path='/profile' element={isLogged ? <Profile /> : <SignIn />} />
         <Route path='/sign-up' element={isLogged ? <Home /> : <SignUp />} />
         <Route path='/sign-in' element={isLogged ? <Home /> : <SignIn />} />
         <Route
@@ -59,7 +56,7 @@ function App() {
         />
         <Route
           path='/add-diary/:docId'
-          element={isLogged ? <AddDiary /> : <Navigate to='/sign-in' />}
+          element={isLogged ? <AddDiary /> : <SignIn />}
         />
         <Route path='/*' element={<Error />} />
       </Routes>

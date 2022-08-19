@@ -1,6 +1,7 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import createSagaMiddleware from 'redux-saga';
 import { authReducer } from './features/auth/authSlice';
+import { diaryReducer } from './features/diary/diarySlice';
 import { userReducer } from './features/user/userSlice';
 import rootSaga from './rootSaga';
 
@@ -10,6 +11,7 @@ export const store = configureStore({
   reducer: {
     auth: authReducer,
     user: userReducer,
+    diary: diaryReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(sagaMiddleware),

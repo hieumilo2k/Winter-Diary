@@ -84,8 +84,8 @@ const SignUp = () => {
       const { data } = await authApi.signUp({
         firstName,
         lastName,
-        email,
-        username,
+        email: email.toLowerCase(),
+        username: username.toLowerCase(),
         password,
       });
       setUser({ ...user, err: '', success: data.msg });

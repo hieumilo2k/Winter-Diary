@@ -42,7 +42,10 @@ const SignIn = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const { data } = await authApi.signIn({ username, password });
+      const { data } = await authApi.signIn({
+        username: username.toLowerCase(),
+        password,
+      });
 
       if (rememberMe) {
         localStorage.setItem('firstLogin', 'true');
