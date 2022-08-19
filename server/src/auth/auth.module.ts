@@ -18,6 +18,6 @@ import { JwtStrategy } from './guards/jwt.strategy';
   ],
   controllers: [AuthController, UserController],
   providers: [AuthService, AuthRepository, UserService, JwtStrategy],
-  exports: [JwtStrategy, PassportModule],
+  exports: [JwtStrategy, PassportModule, MongooseModule],
 })
 export class AuthModule {}

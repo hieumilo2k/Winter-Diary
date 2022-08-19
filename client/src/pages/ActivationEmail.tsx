@@ -81,8 +81,9 @@ const ActivationEmail = () => {
             size='large'
             variant='contained'
             sx={{ mt: 3, mb: 2, py: 2 }}
-            className='font-dynaPuff bg-grey-dark rounded-xl hover:bg-grey-darkHover text-lg'
-            onClick={() => navigate('/')}
+            className='font-dynaPuff bg-grey-dark rounded-xl hover:bg-grey-darkHover text-lg disabled:text-white-F1cc'
+            disabled={success ? false : true}
+            onClick={() => navigate('/sign-in')}
           >
             Winter Diary
           </Button>

@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+@import 'quill/dist/quill.snow.css';
 @import 'react-calendar/dist/Calendar.css';
 
 @import url('https://fonts.googleapis.com/css2?family=Cabin&family=Roboto+Condensed:wght@400;700&display=swap');
@@ -13,8 +14,13 @@
 /* ---------------------- */
 /* - font DynaPuff */
 @import url('https://fonts.googleapis.com/css2?family=DynaPuff&display=swap');
-/* ---------------------- */
-
+/* --------------- */
+/* font Roboto Slab */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap');
+/* ---------------- */
+/* font Lobster */
+@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+/* ------------ */
 body {
   background-image: url('./assets/background.png');
   background-size: cover;
@@ -183,3 +189,69 @@ body {
   border-radius: 24%;
 }
 /* -------- */
+
+/* Quill */
+.container .ql-editor {
+  font-size: 20px;
+  width: 8.5in;
+  min-height: 6in;
+  padding: 0.6in;
+  margin: 1rem;
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+  background-color: #eed180;
+  border-radius: 20px;
+  font-family: 'Roboto Slab', serif;
+}
+
+.container .ql-container.ql-snow {
+  border: none;
+  display: flex;
+  justify-content: center;
+}
+
+.container .ql-toolbar.ql-snow {
+  display: flex;
+  justify-content: center;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  font-family: 'DynaPuff', 'cursive';
+  background-color: #ffe7bf;
+  border: none;
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+}
+
+.ql-snow .ql-picker.ql-size .ql-picker-label::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item::before {
+  content: attr(data-value) !important;
+}
+
+.ql-snow .ql-picker.ql-font .ql-picker-label::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item::before {
+  content: attr(data-value) !important;
+}
+
+@page {
+  margin: 1in;
+}
+
+@media print {
+  body {
+    background: none;
+  }
+
+  .container .ql-editor {
+    width: 6.5in;
+    height: 9in;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+    align-self: flex-start;
+  }
+
+  .container .ql-toolbar.ql-snow {
+    display: none;
+  }
+}
+
+/* ----- */

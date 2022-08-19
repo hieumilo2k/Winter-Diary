@@ -1,5 +1,10 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom';
 import { authActions } from './app/features/auth/authSlice';
 import { userActions } from './app/features/user/userSlice';
 import { useAppDispatch, useAppSelector } from './app/hooks';
@@ -38,10 +43,6 @@ function App() {
           element={isLogged ? <AllDiaries /> : <SignIn />}
         />
         <Route path='/profile' element={isLogged ? <Profile /> : <SignIn />} />
-        <Route
-          path='/add-diary/:docId'
-          element={isLogged ? <AddDiary /> : <SignIn />}
-        />
         <Route path='/sign-up' element={isLogged ? <Home /> : <SignUp />} />
         <Route path='/sign-in' element={isLogged ? <Home /> : <SignIn />} />
         <Route
@@ -52,6 +53,10 @@ function App() {
         <Route
           path='/user/activate/:activationToken'
           element={<ActivationEmail />}
+        />
+        <Route
+          path='/add-diary/:docId'
+          element={isLogged ? <AddDiary /> : <SignIn />}
         />
         <Route path='/*' element={<Error />} />
       </Routes>

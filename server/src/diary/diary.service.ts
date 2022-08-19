@@ -9,6 +9,7 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { AuthGuard } from '@nestjs/passport';
 import { Model } from 'mongoose';
+import { UserDocument } from './../auth/user.entity';
 import { DiaryDocument } from './diary.entity';
 
 @UseGuards(AuthGuard())
@@ -16,6 +17,7 @@ import { DiaryDocument } from './diary.entity';
 export class DiaryService {
   constructor(
     @InjectModel('Diary') private readonly diaryModel: Model<DiaryDocument>,
+    @InjectModel('User') private readonly userModel: Model<UserDocument>,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
   ) {}
@@ -38,23 +40,20 @@ export class DiaryService {
     }
   };
 
-  getCurrentUserId(token: string) {
-    try {
-      const { id } = this.jwtService.verify(token, {
-        secret: this.configService.get('ACCESS_TOKEN_SECRET'),
-      });
-      return id;
-    } catch (error) {
-      throw new UnauthorizedException('Websocket token is invalid');
-    }
-  }
-
-  async findOrCreateDocument(ident: string) {
-    if (ident == null) return;
+  async findOrCreateDocument(ident: string, userId: string) {
+    if (ident == null || !ident.includes(userId)) return;
 
     const diary = await this.diaryModel.findOne({ ident });
     if (diary) return diary;
-    return await this.diaryModel.create({ ident, data: this.defaultValue });
+
+    const newDiary = await this.diaryModel.create({
+      ident,
+      data: this.defaultValue,
+    });
+    const user = await this.userModel.findById({ _id: userId });
+    user.diaries.push(newDiary._id);
+    user.save();
+    return newDiary;
   }
 
   async updateDiary(ident: string, data) {
