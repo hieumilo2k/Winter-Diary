@@ -11,6 +11,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { Logger, UnauthorizedException } from '@nestjs/common';
+import { DiarySendChangesDto } from './dtos/diarySendChanges.dto';
 
 @WebSocketGateway({ namespace: 'diary', cors: { origin: '*' } })
 export class DiaryGateway
@@ -47,7 +48,7 @@ export class DiaryGateway
     client.disconnect();
   }
 
-  @SubscribeMessage('get-diary')
+  @SubscribeMessage('getDiary')
   async getDiary(
     @MessageBody() ident: string,
     @ConnectedSocket() client: Socket,
@@ -55,14 +56,20 @@ export class DiaryGateway
     const userId = client.handshake.auth.id;
     const diary = await this.diaryService.findOrCreateDocument(ident, userId);
     client.join(ident);
-    client.emit('load-diary', diary.data);
+    client.emit('loadDiary', diary.data);
 
-    client.on('send-changes', (delta) => {
-      client.broadcast.to(ident).emit('receive-changes', delta);
-    });
-
-    client.on('save-diary', async (data) => {
+    client.on('saveDiary', async (data) => {
       await this.diaryService.updateDiary(ident, data);
     });
+  }
+
+  @SubscribeMessage('sendChanges')
+  sendChanges(
+    @MessageBody() diarySendChangesDto: DiarySendChangesDto,
+    @ConnectedSocket() client: Socket,
+  ) {
+    const { ident, document } = diarySendChangesDto;
+    client.join(ident);
+    client.emit('receiveChanges', document);
   }
 }

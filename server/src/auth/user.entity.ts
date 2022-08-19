@@ -23,7 +23,7 @@ export class User extends Document {
 
   @Prop({
     default:
-      'https://res.cloudinary.com/wintersonata/image/upload/v1660557389/WinterDiary/winterdiary_imgDefault.gif',
+      'https://res.cloudinary.com/wintersonata/image/upload/v1660833905/WinterDiary/avatar_default.jpg',
   })
   avatar: string;
 
