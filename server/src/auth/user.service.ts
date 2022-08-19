@@ -12,7 +12,10 @@ export class UserService {
     @InjectModel('User') private readonly userModel: Model<UserDocument>,
   ) {}
   async getUser(id: string): Promise<UserDocument> {
-    const user = this.userModel.findById(id).select('-password');
+    const user = await this.userModel
+      .findById(id)
+      .select('-password')
+      .populate('diaries', '_id createdAt');
     if (!user) throw new NotFoundException('User not found');
     return user;
   }
