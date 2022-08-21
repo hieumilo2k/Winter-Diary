@@ -51,7 +51,10 @@ const TOOLBAR_OPTIONS = [
 const AddDiary = () => {
   const { user } = useAppSelector((state: AppState) => state.user);
   const { document } = useAppSelector((state: AppState) => state.diary);
-  const bytes = cryptoJs.AES.decrypt(document.toString(), 'secret');
+  const bytes = cryptoJs.AES.decrypt(
+    document.toString(),
+    `${process.env.REACT_APP_SECRET_AES_KEY}`
+  );
   const originalText = bytes.toString(cryptoJs.enc.Utf8);
 
   const dispatch = useAppDispatch();
@@ -71,7 +74,10 @@ const AddDiary = () => {
   ) => {
     setText(value);
     if (source === 'user' && docId) {
-      const ciphertextSend = cryptoJs.AES.encrypt(value, 'secret').toString();
+      const ciphertextSend = cryptoJs.AES.encrypt(
+        value,
+        `${process.env.REACT_APP_SECRET_AES_KEY}`
+      ).toString();
       sendChanges({ document: ciphertextSend, ident: docId });
     }
   };
@@ -89,6 +95,7 @@ const AddDiary = () => {
     return () => {
       socketDisconnect();
       dispatch(diaryActions.setClose());
+      dispatch(userActions.getUserStart());
     };
   }, [dispatch, docId, navigate, user.id]);
 

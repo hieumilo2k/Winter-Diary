@@ -255,3 +255,48 @@ body {
 }
 
 /* ----- */
+
+/* Pagination Custom */
+.pagination-custom button[aria-label*='page'] {
+  font-family: 'Cabin', 'sans-serif';
+  font-weight: bold;
+}
+/* ----------------- */
+
+/* Modal Diary */
+.modalDiary .ql-editor {
+  font-family: 'Roboto Slab', serif;
+  font-size: 20px;
+}
+/* ----------- */
+
+/* Scroll Modal */
+/* width */
+.custom-scroll {
+  scrollbar-width: none;
+}
+
+.custom-scroll::-webkit-scrollbar {
+  width: 5px;
+  display: none;
+}
+
+/* Track */
+.custom-scroll::-webkit-scrollbar-track {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+/* Handle */
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: #2c3333;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  background: #111313;
+}
+/* ------------ */
