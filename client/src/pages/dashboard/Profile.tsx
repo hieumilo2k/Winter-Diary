@@ -176,7 +176,7 @@ const Profile = () => {
         <Typography
           component='h1'
           variant='h2'
-          className='font-oleo-script cursor-pointer hover:text-grey-darkHover'
+          className='font-oleo-script cursor-pointer text-grey-dark hover:text-grey-darkHover'
           onClick={() => navigate('/')}
         >
           Winter Diary

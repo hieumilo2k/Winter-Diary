@@ -1,3 +1,4 @@
+import { UserSchema } from './../auth/user.entity';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 

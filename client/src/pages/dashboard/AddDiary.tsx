@@ -8,7 +8,7 @@ import { diaryActions } from '../../app/features/diary/diarySlice';
 import { userActions } from '../../app/features/user/userSlice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { AppState } from '../../app/store';
-import { Loading, Logo } from '../../components';
+import { Logo } from '../../components';
 import {
   connectWithSocketServer,
   getDiary,
@@ -16,7 +16,7 @@ import {
   sendChanges,
   socketDisconnect,
 } from '../../realtime/socketConnection';
-import Error from '../Error';
+import cryptoJs from 'crypto-js';
 
 const SAVE_INTERVAL_MS = 2000;
 
@@ -51,12 +51,21 @@ const TOOLBAR_OPTIONS = [
 const AddDiary = () => {
   const { user } = useAppSelector((state: AppState) => state.user);
   const { document } = useAppSelector((state: AppState) => state.diary);
+  const bytes = cryptoJs.AES.decrypt(
+    document.toString(),
+    `${process.env.REACT_APP_SECRET_AES_KEY}`
+  );
+  const originalText = bytes.toString(cryptoJs.enc.Utf8);
+
   const dispatch = useAppDispatch();
 
   const { docId } = useParams();
   const navigate = useNavigate();
 
-  const [text, setText] = useState<Value>(document ? document : 'Loading...');
+  const [save, setSave] = useState(true);
+  const [text, setText] = useState<Value>(
+    document ? originalText : 'Loading...'
+  );
   const handleChange = (
     value: string,
     delta: Value,
@@ -65,7 +74,11 @@ const AddDiary = () => {
   ) => {
     setText(value);
     if (source === 'user' && docId) {
-      sendChanges({ document: value, ident: docId });
+      const ciphertextSend = cryptoJs.AES.encrypt(
+        value,
+        `${process.env.REACT_APP_SECRET_AES_KEY}`
+      ).toString();
+      sendChanges({ document: ciphertextSend, ident: docId });
     }
   };
 
@@ -82,18 +95,22 @@ const AddDiary = () => {
     return () => {
       socketDisconnect();
       dispatch(diaryActions.setClose());
+      dispatch(userActions.getUserStart());
     };
   }, [dispatch, docId, navigate, user.id]);
 
   useEffect(() => {
-    setText(document);
+    setText(originalText);
     const interval = setInterval(() => {
       saveDiary(document);
+      setSave(true);
     }, SAVE_INTERVAL_MS);
 
     return () => {
       clearInterval(interval);
+      setSave(false);
     };
+    //eslint-disable-next-line
   }, [document]);
 
   return (
@@ -117,6 +134,9 @@ const AddDiary = () => {
         />
       </div>
       <div className='absolute bottom-0 top-0 right-0 left-0 bg-grey-darkHover -z-50'></div>
+      <div className='absolute top-1 left-12 z-50 font-permanent-marker'>
+        <p>{save ? 'saved !' : 'saving ...'}</p>
+      </div>
     </div>
   );
 };

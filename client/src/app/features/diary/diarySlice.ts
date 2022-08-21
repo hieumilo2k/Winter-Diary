@@ -8,7 +8,7 @@ interface DiaryState {
 
 const initialState: DiaryState = {
   open: false,
-  document: '',
+  document: "can't watch",
 };
 
 export const diarySlice = createSlice({
@@ -23,7 +23,7 @@ export const diarySlice = createSlice({
     },
     setClose(state) {
       state.open = false;
-      state.document = 'Loading ...';
+      state.document = "can't watch";
     },
     setSaveDocument(state, action: PayloadAction<Value>) {},
   },

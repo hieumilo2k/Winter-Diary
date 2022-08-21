@@ -1,4 +1,5 @@
 import {
+  BadGatewayException,
   Injectable,
   Logger,
   UnauthorizedException,
@@ -51,12 +52,30 @@ export class DiaryService {
       data: this.defaultValue,
     });
     const user = await this.userModel.findById({ _id: userId });
-    user.diaries.push(newDiary._id);
+    user.diaries.unshift(newDiary._id);
     user.save();
     return newDiary;
   }
 
   async updateDiary(ident: string, data) {
     return await this.diaryModel.findOneAndUpdate({ ident }, { data: data });
+  }
+
+  async getDocument(docId: string, userId: string) {
+    const document = await this.diaryModel.findById({ _id: docId });
+    if (!document.ident.includes(userId))
+      throw new BadGatewayException("User can't access");
+    return document;
+  }
+
+  async deleteDocument(docId: string, userId: string) {
+    const document = await this.diaryModel.findByIdAndRemove({ _id: docId });
+    if (document) {
+      await this.userModel.findByIdAndUpdate(
+        { _id: userId },
+        { $pull: { diaries: docId } },
+      );
+    }
+    return { msg: 'Delete success' };
   }
 }
