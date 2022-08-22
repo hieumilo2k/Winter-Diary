@@ -5,6 +5,10 @@
   "author": "Ngo Trung Hieu (Winter Wind)",
   "private": true,
   "license": "UNLICENSED",
+  "engines": {
+    "yarn": "1.x",
+    "node": ">=8.0.0"
+  },
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
