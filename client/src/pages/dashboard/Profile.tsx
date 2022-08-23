@@ -294,7 +294,9 @@ const Profile = () => {
               loading ||
               isEmpty(firstName) ||
               isEmpty(lastName) ||
-              (firstName === user.firstName && lastName === user.lastName)
+              (firstName === user.firstName &&
+                lastName === user.lastName &&
+                !avatar)
             }
           >
             Update Profile
