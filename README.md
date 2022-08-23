@@ -1,4 +1,4 @@
-![winter diary](client/build/logo192.png)
+![winter diary](https://res.cloudinary.com/wintersonata/image/upload/v1660357144/WinterDiary/logo192.png)
 
 # Winter Diary
 
