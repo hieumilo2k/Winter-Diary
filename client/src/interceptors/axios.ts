@@ -1,7 +1,8 @@
 import axios, { AxiosRequestConfig } from 'axios';
+import Cookies from 'js-cookie';
 
 const axiosJWT = axios.create({
-  baseURL: 'http://localhost:5000/nth/api/v1',
+  baseURL: `${process.env.REACT_APP_SERVER_URL}/nth/api/v1`,
   withCredentials: true,
 });
 
@@ -10,10 +11,11 @@ axiosJWT.interceptors.request.use(
     const firstLogin =
       localStorage.getItem('firstLogin') ||
       sessionStorage.getItem('firstLogin');
-    if (firstLogin) {
+    const refreshToken = Cookies.get('refreshToken');
+    if (firstLogin && refreshToken) {
       const res = await axios.post(
-        `${process.env.REACT_APP_CLIENT_URL}/nth/api/v1/auth/refreshToken`,
-        {},
+        `${process.env.REACT_APP_SERVER_URL}/nth/api/v1/auth/refreshToken`,
+        { refreshToken },
         { withCredentials: true }
       );
 
