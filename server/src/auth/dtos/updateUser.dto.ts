@@ -15,9 +15,9 @@ export class UpdateUserDto {
 
   @IsString()
   @MinLength(5)
-  @Matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{5,}$/, {
+  @Matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{5,}$/, {
     message:
-      'Your password must be at least 5 characters including a lowercase letter, an uppercase letter, and a number',
+      'Your password must be at least 5 characters including a lowercase letter, an uppercase letter, a number and a special character',
   })
   @IsOptional()
   password: string;
