@@ -10,7 +10,7 @@ export const isEmail = (email: string) => {
 };
 
 export const isPassword = (password: string) => {
-  const re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{5,}$/;
+  const re = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{5,}$/;
   return re.test(password);
 };
 

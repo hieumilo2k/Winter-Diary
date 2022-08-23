@@ -245,7 +245,7 @@ const Profile = () => {
             disabled
             className='customTextField'
           />
-          <Tooltip title='*Your password must be at least 5 characters including a lowercase letter, an uppercase letter, and a number'>
+          <Tooltip title='*Your password must be at least 5 characters including a lowercase letter, an uppercase letter, and a numberYour password must be at least 5 characters including a lowercase letter, an uppercase letter, a number and a special character'>
             <TextField
               margin='normal'
               required
