@@ -5,16 +5,14 @@
   "author": "Ngo Trung Hieu (Winter Wind)",
   "private": true,
   "license": "UNLICENSED",
+  "engines": {
+    "yarn": "1.x",
+    "node": ">=8.0.0"
+  },
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "client": "cd ../client && yarn start",
-    "client-install": "cd ../client && yarn install",
-    "server-install": "npm install",
-    "install-all": "concurrently \"npm run server-install\" \"npm run client-install\"",
-    "dev": "concurrently \"npm run start:dev\" \"npm run client\"",
-    "heroku-postbuild": "cd ../client && yarn && yarn build",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",

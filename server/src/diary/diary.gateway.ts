@@ -70,6 +70,6 @@ export class DiaryGateway
   ) {
     const { ident, document } = diarySendChangesDto;
     client.join(ident);
-    client.emit('receiveChanges', document);
+    client.to(ident).emit('receiveChanges', document);
   }
 }
