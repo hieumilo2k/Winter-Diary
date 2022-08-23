@@ -1,22 +1,26 @@
 import { Register } from './../models';
 import axios from 'axios';
 import { Login } from '../models';
-
+import Cookies from 'js-cookie';
 const authApi = {
   signUp: async (register: Register) => {
     return await axios.post(
-      `${process.env.REACT_APP_CLIENT_URL}/nth/api/v1/auth/signup`,
+      `${process.env.REACT_APP_SERVER_URL}/nth/api/v1/auth/signup`,
       register
     );
   },
-  signIn: async (login: Login) =>
-    await axios.post(
-      `${process.env.REACT_APP_CLIENT_URL}/nth/api/v1/auth/signin`,
-      login
-    ),
+  signIn: async (login: Login) => {
+    const { data } = await axios.post(
+      `${process.env.REACT_APP_SERVER_URL}/nth/api/v1/auth/signin`,
+      login,
+      { withCredentials: true }
+    );
+    Cookies.set('refreshToken', data.refreshToken);
+    return { msg: 'Login Success !' };
+  },
   activationEmail: async (activationToken: string) => {
     return await axios.post(
-      `${process.env.REACT_APP_CLIENT_URL}/nth/api/v1/auth/activation`,
+      `${process.env.REACT_APP_SERVER_URL}/nth/api/v1/auth/activation`,
       { activationToken }
     );
     // do đường dẫn cũ từ email + '/' ra khác đường dẫn api
@@ -26,7 +30,7 @@ const authApi = {
   },
   resetPassword: async (token: string, password: string) => {
     return await axios.post(
-      `${process.env.REACT_APP_CLIENT_URL}/nth/api/v1/auth/resetPassword`,
+      `${process.env.REACT_APP_SERVER_URL}/nth/api/v1/auth/resetPassword`,
       { password },
       {
         headers: {
@@ -36,7 +40,9 @@ const authApi = {
     );
   },
   logout: async () => {
-    await axios.get('nth/api/v1/auth/logout');
+    await axios.get(
+      `${process.env.REACT_APP_SERVER_URL}/nth/api/v1/auth/logout`
+    );
     localStorage.removeItem('firstLogin');
     sessionStorage.removeItem('firstLogin');
     window.location.href = '/';

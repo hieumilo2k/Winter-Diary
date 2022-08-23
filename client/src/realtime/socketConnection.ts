@@ -21,7 +21,7 @@ interface sendChangeDto {
 let socket: Socket<ServerToClientEvents, ClientToServerEvents>;
 
 export const connectWithSocketServer = (userId: string) => {
-  socket = io('http://localhost:5000/diary', {
+  socket = io(`${process.env.REACT_APP_SERVER_URL}/diary`, {
     auth: {
       id: userId,
     },

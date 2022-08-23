@@ -42,7 +42,7 @@ const SignIn = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const { data } = await authApi.signIn({
+      const { msg } = await authApi.signIn({
         username: username.toLowerCase(),
         password,
       });
@@ -53,8 +53,8 @@ const SignIn = () => {
         localStorage.removeItem('firstLogin');
         sessionStorage.setItem('firstLogin', 'true');
       }
-      dispatch(authActions.loginStart(data.msg));
-      setUser({ ...user, err: '', success: data.msg });
+      dispatch(authActions.loginStart(msg));
+      setUser({ ...user, err: '', success: msg });
     } catch (error) {
       const err = error as AxiosError;
       const data: any = err.response?.data;

@@ -36,13 +36,14 @@ export class AuthController {
   async signIn(@Body() signInUserDto: SignInUserDto, @Res() res: Response) {
     const { refreshToken } = await this.authService.signIn(signInUserDto);
 
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      path: 'nth/api/v1/auth/refreshToken',
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
-
-    return res.status(200).json({ msg: 'Login success!' });
+    // res.cookie('refreshToken', refreshToken, {
+    //   secure: false,
+    //   sameSite: 'none',
+    //   httpOnly: false,
+    //   // path: `/nth/api/v1/auth/refreshToken`,
+    //   maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    // });
+    return res.status(200).json({ refreshToken });
   }
 
   @Post('/refreshToken')
