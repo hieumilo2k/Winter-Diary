@@ -1,5 +1,4 @@
 import { Box } from '@mui/material';
-import cryptoJs from 'crypto-js';
 import React, { useEffect, useState } from 'react';
 import ReactQuill, { Value } from 'react-quill';
 import diaryApi from '../../api/diaryApi';
@@ -28,12 +27,7 @@ const DiaryItems: React.FC<DiaryItemsProps> = ({ docId }) => {
   useEffect(() => {
     const fetchDocument = async () => {
       const { data } = await diaryApi.getDocument(docId);
-      const bytes = cryptoJs.AES.decrypt(
-        data.data.toString(),
-        `${process.env.REACT_APP_SECRET_AES_KEY}`
-      );
-      const text = bytes.toString(cryptoJs.enc.Utf8);
-      setDoc(text);
+      setDoc(data.data);
     };
     fetchDocument();
   }, [docId]);
