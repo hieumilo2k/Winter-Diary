@@ -3,12 +3,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface DiaryState {
   open: boolean;
-  document: Value;
+  document: Value | undefined;
 }
 
 const initialState: DiaryState = {
   open: false,
-  document: "can't watch",
+  document: undefined,
 };
 
 export const diarySlice = createSlice({
@@ -23,7 +23,7 @@ export const diarySlice = createSlice({
     },
     setClose(state) {
       state.open = false;
-      state.document = "can't watch";
+      state.document = undefined;
     },
     setSaveDocument(state, action: PayloadAction<Value>) {},
   },
