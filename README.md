@@ -4,8 +4,6 @@
 
 ## _Send love to your heart ❤_
 
-Write your diary: **[WinterDiary](https://winterdiary.netlify.app)**
-
 ## Features
 
 - Sign in, Sign up, Logout

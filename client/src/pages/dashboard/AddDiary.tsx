@@ -8,7 +8,7 @@ import { diaryActions } from '../../app/features/diary/diarySlice';
 import { userActions } from '../../app/features/user/userSlice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { AppState } from '../../app/store';
-import { Logo } from '../../components';
+import { Loading, Logo } from '../../components';
 import {
   connectWithSocketServer,
   getDiary,
@@ -16,7 +16,6 @@ import {
   sendChanges,
   socketDisconnect,
 } from '../../realtime/socketConnection';
-import cryptoJs from 'crypto-js';
 
 const SAVE_INTERVAL_MS = 2000;
 
@@ -50,12 +49,7 @@ const TOOLBAR_OPTIONS = [
 
 const AddDiary = () => {
   const { user } = useAppSelector((state: AppState) => state.user);
-  const { document } = useAppSelector((state: AppState) => state.diary);
-  const bytes = cryptoJs.AES.decrypt(
-    document.toString(),
-    `${process.env.REACT_APP_SECRET_AES_KEY}`
-  );
-  const originalText = bytes.toString(cryptoJs.enc.Utf8);
+  const { document, open } = useAppSelector((state: AppState) => state.diary);
 
   const dispatch = useAppDispatch();
 
@@ -63,9 +57,8 @@ const AddDiary = () => {
   const navigate = useNavigate();
 
   const [save, setSave] = useState(true);
-  const [text, setText] = useState<Value>(
-    document ? originalText : 'Loading...'
-  );
+  const [text, setText] = useState<Value | undefined>(document);
+
   const handleChange = (
     value: string,
     delta: Value,
@@ -74,11 +67,7 @@ const AddDiary = () => {
   ) => {
     setText(value);
     if (source === 'user' && docId) {
-      const ciphertextSend = cryptoJs.AES.encrypt(
-        value,
-        `${process.env.REACT_APP_SECRET_AES_KEY}`
-      ).toString();
-      sendChanges({ document: ciphertextSend, ident: docId });
+      sendChanges({ document: value, ident: docId });
     }
   };
 
@@ -100,18 +89,36 @@ const AddDiary = () => {
   }, [dispatch, docId, navigate, user.id]);
 
   useEffect(() => {
-    setText(originalText);
-    const interval = setInterval(() => {
-      saveDiary(document);
-      setSave(true);
-    }, SAVE_INTERVAL_MS);
+    if (open && document && text) {
+      const interval = setInterval(() => {
+        saveDiary(text);
+        setSave(true);
+      }, SAVE_INTERVAL_MS);
 
-    return () => {
-      clearInterval(interval);
-      setSave(false);
-    };
+      return () => {
+        clearInterval(interval);
+        setSave(false);
+      };
+    }
     //eslint-disable-next-line
-  }, [document]);
+  }, [text]);
+
+  useEffect(() => {
+    if (open && document) {
+      setText(document);
+      return () => {
+        setText(document);
+      };
+    }
+  }, [open, document]);
+
+  if (!open) {
+    return (
+      <>
+        <Loading />
+      </>
+    );
+  }
 
   return (
     <div className='relative min-h-screen'>
