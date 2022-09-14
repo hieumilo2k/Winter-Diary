@@ -2,9 +2,9 @@
 
 # Winter Diary
 
-## _Send love to your heart ❤_
+Link: https://winterdiary.onrender.com
 
-Write your diary: **[WinterDiary](https://winterdiary.netlify.app)**
+## _Send love to your heart ❤_
 
 ## Features
 
