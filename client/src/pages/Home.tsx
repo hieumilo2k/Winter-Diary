@@ -73,7 +73,7 @@ const Home = () => {
           <GitHubIcon
             className='text-white-F1 mx-[35px] my-[6px] text-3xl cursor-pointer hover:scale-125'
             onClick={() =>
-              window.open('https://github.com/hieumilo2k', '_blank')
+              window.open('https://github.com/ngohieu1209', '_blank')
             }
           />
           <InstagramIcon
