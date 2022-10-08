@@ -3,7 +3,6 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Navigate,
 } from 'react-router-dom';
 import { authActions } from './app/features/auth/authSlice';
 import { userActions } from './app/features/user/userSlice';
@@ -26,8 +25,8 @@ function App() {
 
   useEffect(() => {
     const firstLogin =
-      localStorage.getItem('firstLogin') ||
-      sessionStorage.getItem('firstLogin');
+    localStorage.getItem('firstLogin') ||
+    sessionStorage.getItem('firstLogin');
     if (firstLogin) {
       dispatch(authActions.loginSuccess(true));
       dispatch(userActions.getUserStart());

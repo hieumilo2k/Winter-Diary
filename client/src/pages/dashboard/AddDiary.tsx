@@ -17,7 +17,7 @@ import {
   socketDisconnect,
 } from '../../realtime/socketConnection';
 
-const SAVE_INTERVAL_MS = 5000;
+const SAVE_INTERVAL_MS = 3500;
 
 const fontSizeArr = ['20px', '28px', '36px', '48px', '64px'];
 let Size = Quill.import('attributors/style/size');
@@ -75,7 +75,7 @@ const AddDiary = () => {
     if (user.id && docId && docId.includes(user.id)) {
       connectWithSocketServer(user.id);
       getDiary(docId);
-      // dispatch(userActions.getUserStart());
+      dispatch(userActions.getUserStart());
     } else {
       navigate('/');
       window.location.replace('/error');
@@ -84,7 +84,7 @@ const AddDiary = () => {
     return () => {
       socketDisconnect();
       dispatch(diaryActions.setClose());
-      // dispatch(userActions.getUserStart());
+      dispatch(userActions.getUserStart());
     };
   }, [dispatch, docId, navigate, user.id]);
 
